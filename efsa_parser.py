@@ -157,7 +157,7 @@ class EfsaParser:
                 amr_df.append(values)
 
         amr_df = pd.DataFrame(amr_df)
-        values["Analysis_ID"] = self.analysis_id
+        amr_df["Analysis_ID"] = self.analysis_id
 
         # column id as first column
         cols = amr_df.columns.tolist()
