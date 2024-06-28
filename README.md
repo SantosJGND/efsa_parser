@@ -6,6 +6,7 @@ Script to parse EFSA pipeline output.
 
 ```python
 
+from efsa_parser import EfsaResults
 
 dir_to_sample= {
     "sample1": "/home/bioinf/Desktop/INSA/OTHER/EFSA_output/friendly_waddington",
