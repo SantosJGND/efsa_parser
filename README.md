@@ -20,5 +20,4 @@ results= EfsaResults(dir_to_sample, outputs_directory, output_file)
 results.parse_all_results()
 results.merge_output()
 
-
 ```

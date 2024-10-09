@@ -28,9 +28,12 @@ class JsonParser:
         self.parsed_results = json_file
 
     def get_parsed_results(self):
-        with open(self.parsed_results) as f:
-            results = json.load(f)
-        return results
+        try:
+            with open(self.parsed_results) as f:
+                results = json.load(f)
+            return results
+        except FileNotFoundError:
+            return {}
 
     @staticmethod
     def parse_section_return_dict(json_dict):
@@ -118,11 +121,25 @@ class EfsaParser:
                 self.summary.update(self.section_process_dict[subsection](value))
             else:
                 self.recursive_parse_json(value)
+    
+    ##############################################################
+    ############ DEPLOY PARSERS TO MAIN SECTIONS ############
 
     def parse_json_results(self, parsed_results: dict):
 
+        if not parsed_results:
+
+            for section in self.quality_check_sections:
+                self.summary[section] = "-"
+
+            return
+
         for section in self.quality_check_sections:
             self.recursive_parse_json(parsed_results[section])
+
+    
+    ##############################################################
+    ############ PROCESSING OF RESULTS INTO DATAFRAMES ############
 
     def process_summary(self):
         """join list values in summary dictionary to strings"""
@@ -138,12 +155,20 @@ class EfsaParser:
         return summary_df
 
     def pathotype_dict_to_df(self):
+        if "PredictedPathotype" not in self.gene_profiles:
+            return pd.DataFrame()
+        
         pathotype_df = pd.DataFrame(self.gene_profiles["PredictedPathotype"])
         pathotype_df["Analysis_ID"] = self.analysis_id
 
         return pathotype_df
 
     def amr_dict_to_df(self):
+
+        if "AMRProfile" not in self.gene_profiles:
+            return pd.DataFrame()
+        
+
         amr_df = []
 
         for genevar in self.gene_profiles["AMRProfile"]:
@@ -167,6 +192,9 @@ class EfsaParser:
         return amr_df
 
     def process_mlst_profile(self):
+
+        if "MLSTProfile" not in self.gene_profiles:
+            return pd.DataFrame()	
 
         mlst_df = [
             {"Gene": gene, "ST": st}
@@ -194,7 +222,7 @@ class EfsaResults:
     ) -> None:
         self.dir_to_sample = dir_to_sample
         self.outputs_directory = outputs_directory
-        self.output_file = output_file
+        self.output_file = os.path.join(outputs_directory, output_file)
         self.parsed_results: List[EfsaParser] = []
 
     def merge_dataframes(self, dataframes: list) -> pd.DataFrame:
@@ -207,6 +235,7 @@ class EfsaResults:
 
     def parse_all_results(self):
         for sample, directory in self.dir_to_sample.items():
+            print(sample)
             parser = EfsaParser(directory, sample)
             json_results = parser.parser.get_parsed_results()
             parser.parse_json_results(json_results)
@@ -321,6 +350,8 @@ class EfsaResults:
 
         summary_df, pathotype_df, amr_df, mlst_df = self.process_output()
 
+        os.makedirs(self.outputs_directory, exist_ok=True)
+
         with pd.ExcelWriter(self.output_file) as writer:
             summary_df.to_excel(writer, sheet_name=self.SUMMARY_SHEET_NAME, index=False)
             pathotype_df.to_excel(
@@ -328,3 +359,17 @@ class EfsaResults:
             )
             amr_df.to_excel(writer, sheet_name=self.AMR_SHEET_NAME, index=False)
             mlst_df.to_excel(writer, sheet_name=self.MLST_SHEET_NAME, index=False)
+
+        summary_df.to_csv(
+            os.path.join(self.outputs_directory, "summary.csv"), index=False
+        )
+
+        pathotype_df.to_csv(
+            os.path.join(self.outputs_directory, "pathotypes.csv"), index=False
+        )
+
+        amr_df.to_csv(os.path.join(self.outputs_directory, "amr.csv"), index=False)
+
+        mlst_df.to_csv(os.path.join(self.outputs_directory, "mlst.csv"), index=False)
+        
+
