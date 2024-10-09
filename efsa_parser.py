@@ -21,6 +21,40 @@ def recursive_parse_json(json_dict, added_dict={}) -> dict:
     return added_dict
 
 
+
+
+def find_efsa_output(sample_dir: str) -> str:
+    """
+    Find the efsa output directory in the sample directory
+    """
+    for root, dirs, files in os.walk(sample_dir):
+        for dir in dirs:
+            if not dir.startswith('work'):
+                return os.path.join(root, dir)
+    return None
+
+def find_all_efsa_outptus(efsa_output_directoy: str) -> dict:
+    """
+    Find all efsa output directories in the efsa output directory"""
+
+    efsa_outputs = os.listdir(efsa_output_directoy)
+    efsa_outputs = {
+        output: os.path.join(efsa_output_directoy, output) for output in efsa_outputs
+    }
+    efsa_outputs= {
+        output: find_efsa_output(efsa_outputs[output]) for output in efsa_outputs
+    }
+
+    empty_outputs = [
+        output for output in efsa_outputs if efsa_outputs[output] is None
+    ]
+    efsa_outputs = {
+        output: efsa_outputs[output] for output in efsa_outputs if output not in empty_outputs
+    }
+
+    return efsa_outputs, empty_outputs
+
+
 class JsonParser:
 
     def __init__(self, json_file):
@@ -33,6 +67,7 @@ class JsonParser:
                 results = json.load(f)
             return results
         except FileNotFoundError:
+            
             return {}
 
     @staticmethod
@@ -218,12 +253,13 @@ class EfsaResults:
     MLST_SHEET_NAME = "MLST"
 
     def __init__(
-        self, dir_to_sample: dict, outputs_directory: str, output_file: str
+        self, dir_to_sample: dict, outputs_directory: str, output_file: str, log: bool = False
     ) -> None:
         self.dir_to_sample = dir_to_sample
         self.outputs_directory = outputs_directory
         self.output_file = os.path.join(outputs_directory, output_file)
         self.parsed_results: List[EfsaParser] = []
+        self.log= log
 
     def merge_dataframes(self, dataframes: list) -> pd.DataFrame:
 
@@ -235,9 +271,12 @@ class EfsaResults:
 
     def parse_all_results(self):
         for sample, directory in self.dir_to_sample.items():
-            print(sample)
+            if self.log:
+                print(f"Processing {sample}")
             parser = EfsaParser(directory, sample)
             json_results = parser.parser.get_parsed_results()
+            if not json_results and self.log:
+                print(f"No results found for {sample}")
             parser.parse_json_results(json_results)
             parser.process_summary()
             self.parsed_results.append(parser)
