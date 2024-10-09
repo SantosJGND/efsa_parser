@@ -190,8 +190,10 @@ class EfsaParser:
         return summary_df
 
     def pathotype_dict_to_df(self):
+
         if "PredictedPathotype" not in self.gene_profiles:
-            return pd.DataFrame()
+            return pd.DataFrame() 
+        
         
         pathotype_df = pd.DataFrame(self.gene_profiles["PredictedPathotype"])
         pathotype_df["Analysis_ID"] = self.analysis_id
