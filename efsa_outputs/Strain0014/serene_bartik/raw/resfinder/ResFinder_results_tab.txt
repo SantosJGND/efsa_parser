@@ -1,0 +1,2 @@
+Resistance gene	Identity	Alignment Length/Gene Length	Coverage	Position in reference	Contig	Position in contig	Phenotype	Accession no.
+fosX	97.51	402/402	100.0	1..403	NA	NA..NA	Fosfomycin resistance	AL591981

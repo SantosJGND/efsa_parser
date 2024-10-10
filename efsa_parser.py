@@ -21,17 +21,16 @@ def recursive_parse_json(json_dict, added_dict={}) -> dict:
     return added_dict
 
 
-
-
 def find_efsa_output(sample_dir: str) -> str:
     """
     Find the efsa output directory in the sample directory
     """
     for root, dirs, files in os.walk(sample_dir):
         for dir in dirs:
-            if not dir.startswith('work'):
+            if not dir.startswith("work"):
                 return os.path.join(root, dir)
     return None
+
 
 def find_all_efsa_outptus(efsa_output_directoy: str) -> dict:
     """
@@ -41,15 +40,15 @@ def find_all_efsa_outptus(efsa_output_directoy: str) -> dict:
     efsa_outputs = {
         output: os.path.join(efsa_output_directoy, output) for output in efsa_outputs
     }
-    efsa_outputs= {
+    efsa_outputs = {
         output: find_efsa_output(efsa_outputs[output]) for output in efsa_outputs
     }
 
-    empty_outputs = [
-        output for output in efsa_outputs if efsa_outputs[output] is None
-    ]
+    empty_outputs = [output for output in efsa_outputs if efsa_outputs[output] is None]
     efsa_outputs = {
-        output: efsa_outputs[output] for output in efsa_outputs if output not in empty_outputs
+        output: efsa_outputs[output]
+        for output in efsa_outputs
+        if output not in empty_outputs
     }
 
     return efsa_outputs, empty_outputs
@@ -67,7 +66,7 @@ class JsonParser:
                 results = json.load(f)
             return results
         except FileNotFoundError:
-            
+
             return {}
 
     @staticmethod
@@ -156,7 +155,7 @@ class EfsaParser:
                 self.summary.update(self.section_process_dict[subsection](value))
             else:
                 self.recursive_parse_json(value)
-    
+
     ##############################################################
     ############ DEPLOY PARSERS TO MAIN SECTIONS ############
 
@@ -172,7 +171,6 @@ class EfsaParser:
         for section in self.quality_check_sections:
             self.recursive_parse_json(parsed_results[section])
 
-    
     ##############################################################
     ############ PROCESSING OF RESULTS INTO DATAFRAMES ############
 
@@ -192,9 +190,8 @@ class EfsaParser:
     def pathotype_dict_to_df(self):
 
         if "PredictedPathotype" not in self.gene_profiles:
-            return pd.DataFrame() 
-        
-        
+            return pd.DataFrame()
+
         pathotype_df = pd.DataFrame(self.gene_profiles["PredictedPathotype"])
         pathotype_df["Analysis_ID"] = self.analysis_id
 
@@ -204,7 +201,6 @@ class EfsaParser:
 
         if "AMRProfile" not in self.gene_profiles:
             return pd.DataFrame()
-        
 
         amr_df = []
 
@@ -231,18 +227,17 @@ class EfsaParser:
     def process_mlst_profile(self):
 
         if "MLSTProfile" not in self.gene_profiles:
-            return pd.DataFrame()	
+            return pd.DataFrame()
 
         mlst_df = [
-            {"Gene": gene, "ST": st}
-            for gene, st in self.gene_profiles["MLSTProfile"][0].items()
+            {gene: st for gene, st in self.gene_profiles["MLSTProfile"][0].items()}
         ]
 
         mlst_df = pd.DataFrame(mlst_df)
 
         mlst_df["Analysis_ID"] = self.analysis_id
 
-        mlst_df = mlst_df[["Analysis_ID", "Gene", "ST"]]
+        mlst_df = mlst_df[[mlst_df.columns[-1]] + list(mlst_df.columns[:-1])]
 
         return mlst_df
 
@@ -255,13 +250,17 @@ class EfsaResults:
     MLST_SHEET_NAME = "MLST"
 
     def __init__(
-        self, dir_to_sample: dict, outputs_directory: str, output_file: str, log: bool = False
+        self,
+        dir_to_sample: dict,
+        outputs_directory: str,
+        output_file: str,
+        log: bool = False,
     ) -> None:
         self.dir_to_sample = dir_to_sample
         self.outputs_directory = outputs_directory
         self.output_file = os.path.join(outputs_directory, output_file)
         self.parsed_results: List[EfsaParser] = []
-        self.log= log
+        self.log = log
 
     def merge_dataframes(self, dataframes: list) -> pd.DataFrame:
 
@@ -385,6 +384,15 @@ class EfsaResults:
         amr_df = self.process_df(amr_df)
         mlst_df = self.process_df(mlst_df)
 
+        if "ST" in summary_df.columns:
+
+            # match from sample to mlst_df
+            mlst_df = mlst_df.merge(
+                summary_df[["Analysis_ID", "ST"]], on="Analysis_ID", how="left"
+            )
+
+            mlst_df = mlst_df[["Analysis_ID", "ST"] + list(mlst_df.columns[1:-1])]
+
         return summary_df, pathotype_df, amr_df, mlst_df
 
     def merge_output(self):
@@ -402,15 +410,19 @@ class EfsaResults:
             mlst_df.to_excel(writer, sheet_name=self.MLST_SHEET_NAME, index=False)
 
         summary_df.to_csv(
-            os.path.join(self.outputs_directory, "summary.csv"), index=False
+            os.path.join(self.outputs_directory, "summary.tsv"), sep="\t", index=False
         )
 
         pathotype_df.to_csv(
-            os.path.join(self.outputs_directory, "pathotypes.csv"), index=False
+            os.path.join(self.outputs_directory, "pathotypes.tsv"),
+            sep="\t",
+            index=False,
         )
 
-        amr_df.to_csv(os.path.join(self.outputs_directory, "amr.csv"), index=False)
+        amr_df.to_csv(
+            os.path.join(self.outputs_directory, "amr.tsv"), sep="\t", index=False
+        )
 
-        mlst_df.to_csv(os.path.join(self.outputs_directory, "mlst.csv"), index=False)
-        
-
+        mlst_df.to_csv(
+            os.path.join(self.outputs_directory, "mlst.tsv"), sep="\t", index=False
+        )

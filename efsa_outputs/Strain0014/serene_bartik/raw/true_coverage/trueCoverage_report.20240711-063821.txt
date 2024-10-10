@@ -1,0 +1,15 @@
+#gene	percentage_gene_coverage	gene_mean_read_coverage	percentage_gene_low_coverage	number_positions_multiple_alleles	percentage_gene_identity
+abcZ	100.0	148.5	0.0	0	98.32
+bglA	100.0	137.66	0.0	0	100.0
+cat	100.0	151.74	0.0	0	99.38
+dapE	100.0	114.16	0.0	0	99.35
+dat	100.0	149.97	0.0	0	100.0
+ldh	100.0	129.54	0.0	0	100.0
+lhkA	100.0	106.9	0.0	0	100.0
+#general
+>number_absent_genes
+0
+>number_genes_multiple_alleles
+0
+>mean_sample_coverage
+134.07

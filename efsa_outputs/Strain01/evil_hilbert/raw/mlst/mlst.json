@@ -1,0 +1,17 @@
+[
+   {
+      "sequence_type" : "10",
+      "filename" : "EQA2315_contigs.fa",
+      "id" : "EQA2315_contigs.fa",
+      "scheme" : "senterica_achtman_2",
+      "alleles" : {
+         "dnaN" : "2",
+         "sucA" : "5",
+         "hemD" : "3",
+         "thrA" : "10",
+         "aroC" : "5",
+         "hisD" : "6",
+         "purE" : "5"
+      }
+   }
+]

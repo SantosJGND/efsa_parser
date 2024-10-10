@@ -1,0 +1,9 @@
+[
+    {
+        "logLevel": "ERROR",
+        "mitigationID": 2,
+        "NFProcess": "checkM",
+        "title": "Contamination detected",
+        "description": "Contamination calculated by CheckM is above the quality threshold of 2"
+    }
+]

@@ -1,0 +1,44 @@
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                                                     Aminoglycoside                                                                                     |
++-------------------+------------+--------------------------------+------------+-------------------------+----------+----------------------+---------------------------+-----------------+
+| Resistance gene   |   Identity | Alignment Length/Gene Length   |   Coverage | Position in reference   | Contig   | Position in contig   | Phenotype                 | Accession no.   |
+|-------------------+------------+--------------------------------+------------+-------------------------+----------+----------------------+---------------------------+-----------------|
+| aac(6')-Iaa       |      98.63 | 438/438                        |        100 | 1..439                  | NA       | NA..NA               | Aminoglycoside resistance | NC_003197       |
++-------------------+------------+--------------------------------+------------+-------------------------+----------+----------------------+---------------------------+-----------------+
+
+##################### aminoglycoside #####################
+aac(6')-Iaa, ID: 98.63 %, Alignment Length/Gene Length: 438/438, Coverage: 100.0, Positions in reference: 1..439, Contig name: NA, Position: NA..NA
+
+ATGGACATCAGGCAAATGAACAGAACCCATCTGGATCACTGGCGCGGATTGCGAAAACAG
+||||||||||||||||||||||_||||||||||||_|_||||||||||||||||||||||
+ATGGACATCAGGCAAATGAACAAAACCCATCTGGAGCTCTGGCGCGGATTGCGAAAACAG
+
+CTCTGGCCTGGTCACCCGGATGACGCCCATCTGGCGGACGGCGAAGAAATTCTGCAAGCC
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||_||
+CTCTGGCCTGGTCACCCGGATGACGCCCATCTGGCGGACGGCGAAGAAATTCTGCAAACC
+
+GATCATCTGGCATCATTTATTGCGATGGCAGACGGGGTGGCGATTGGCTTTGCGGATGCC
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+GATCATCTGGCATCATTTATTGCGATGGCAGACGGGGTGGCGATTGGCTTTGCGGATGCC
+
+TCAATCCGCCACGATTATGTCAATGGCTGTGACAGTTCGCCCGTGGTTTTCCTTGAAGGT
+||||||||||||||||||||||||||||||||||||||||||||||_|||||||||||||
+TCAATCCGCCACGATTATGTCAATGGCTGTGACAGTTCGCCCGTGGCTTTCCTTGAAGGT
+
+ATTTTTGTTCTCCCCTCATTCCGTCAACGCGGCGTAGCGAAACAATTGATTGCAGCGGTG
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ATTTTTGTTCTCCCCTCATTCCGTCAACGCGGCGTAGCGAAACAATTGATTGCAGCGGTG
+
+CAACGATGGGGAACGAATAAAGGGTGTCGGGAAATGGCCTCCGATACCTCGCCGGAAAAT
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+CAACGATGGGGAACGAATAAAGGGTGTCGGGAAATGGCCTCCGATACCTCGCCGGAAAAT
+
+ACAATTTCCCAGAAAGTTCATCAGGCGTTAGGATTTGAGGAAACAGAGCGCGTCATTTTC
+||||||||||||||||||||_|||||||||||||||||||||||||||||||||||||||
+ACAATTTCCCAGAAAGTTCACCAGGCGTTAGGATTTGAGGAAACAGAGCGCGTCATTTTC
+
+TACCGAAAGCGTTGTTGA
+||||||||||||||||||
+TACCGAAAGCGTTGTTGA
+
+

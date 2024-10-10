@@ -1,0 +1,2 @@
+Sample,Genus,NumContamSNVs,ContamStatus,PercentContam,PercentContamStandardDeviation,BasesExamined,DatabaseDownloadDate
+trim-EQA2316,Error processing sample,0,False,ND,ND,0,ND

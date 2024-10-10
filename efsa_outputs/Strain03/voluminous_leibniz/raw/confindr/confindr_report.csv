@@ -1,0 +1,2 @@
+Sample,Genus,NumContamSNVs,ContamStatus,PercentContam,PercentContamStandardDeviation,BasesExamined,DatabaseDownloadDate
+trim-EQA2314,Salmonella,1,False,0,0,61956,ND

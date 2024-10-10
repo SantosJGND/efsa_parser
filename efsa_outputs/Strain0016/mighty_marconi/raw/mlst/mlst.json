@@ -1,0 +1,17 @@
+[
+   {
+      "alleles" : {
+         "bglA" : "5",
+         "ldh" : "4",
+         "dat" : "1",
+         "abcZ" : "7",
+         "lhkA" : "1",
+         "cat" : "10",
+         "dapE" : "21"
+      },
+      "sequence_type" : "451",
+      "filename" : "Strain0016_contigs.fa",
+      "id" : "Strain0016_contigs.fa",
+      "scheme" : "listeria_2"
+   }
+]
